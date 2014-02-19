@@ -17,11 +17,13 @@
 
 
 require 'chef/knife'
-require 'chef/cookbook_loader'
-require 'chef/cookbook_uploader'
 
 module CookbookBump
   class Bump < Chef::Knife
+
+    deps do
+      require 'chef/cookbook_loader'
+    end
 
     TYPE_INDEX = { "major" => 0, "minor" => 1, "patch" => 2 }
 

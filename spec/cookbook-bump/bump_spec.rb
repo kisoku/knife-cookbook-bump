@@ -1,3 +1,4 @@
+require 'chef/cookbook_loader'
 require 'spec_helper'
 
 module CookbookBump
