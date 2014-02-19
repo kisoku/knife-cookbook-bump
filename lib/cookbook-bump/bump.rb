@@ -19,7 +19,6 @@
 require 'chef/knife'
 require 'chef/cookbook_loader'
 require 'chef/cookbook_uploader'
-require 'grit'
 
 module CookbookBump
   class Bump < Chef::Knife
@@ -85,33 +84,6 @@ module CookbookBump
     def get_version(cookbook_path, cookbook)
       loader = ::Chef::CookbookLoader.new(cookbook_path)
       return loader[cookbook].version
-    end
-
-    def get_tags(cookbook_path, cookbook)
-      git_repo = find_git_repo(cookbook_path, cookbook)
-      g = Grit::Repo.new(git_repo)
-      if g.config["remote.origin.url"].split(File::SEPARATOR).last.scan(cookbook).size > 0
-        ui.confirm("I found a repo at #{git_repo} - do you want to tag it?")
-      else
-        ui.confirm("I didn't find a repo with a name like #{cookbook}.  I did find #{git_repo} - are you sure you want to tag it?")
-      end
-      g.tags.map { |t| t.name }
-    end
-
-    def tag
-    end
-
-    def find_git_repo(cookbook_path, cookbook)
-      loader = ::Chef::CookbookLoader.new(cookbook_path)
-      cookbook_dir = loader[cookbook].root_dir
-      full_path = cookbook_dir.split(File::SEPARATOR)
-      (full_path.length - 1).downto(0) do |search_path_index|
-        git_config = File.join(full_path[0..search_path_index] + [".git", "config"])
-        if File.exist?(git_config)
-          return File.join(full_path[0..search_path_index])
-        end
-      end
-      ui.fatal("Unable to find a git repo for this cookbook.")
     end
   end
 end
