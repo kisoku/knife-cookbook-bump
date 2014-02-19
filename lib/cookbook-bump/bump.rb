@@ -28,9 +28,7 @@ module CookbookBump
 
     banner "knife bump COOKBOOK [MAJOR|MINOR|PATCH]"
 
-
     def run
-  
       self.config = Chef::Config.merge!(config)
       if config.has_key?(:cookbook_path)
         cookbook_path = config["cookbook_path"]
@@ -56,14 +54,13 @@ module CookbookBump
         show_usage
         exit 1
       end
+
       cookbook = name_args.first
       patch_type = name_args.last
       cookbook_path = Array(config[:cookbook_path]).first
 
       patch(cookbook_path, cookbook, patch_type)
-
     end
-
 
     def patch(cookbook_path, cookbook, type)
       t = TYPE_INDEX[type]
